@@ -9,6 +9,7 @@ Usage:
     ~/.virtualenvs/jasna-linux/bin/python scripts/benchmark_decode_backends.py
     ... [--clips CLIP ...] [--backends vali pyav-hw pyav-sw] [--repeats N]
 """
+import os
 
 import argparse
 import csv
@@ -93,7 +94,7 @@ def main() -> None:
     if not clips:
         raise SystemExit(f"no clips found in {DEFAULT_CLIP_DIR}")
 
-    workdir = Path(tempfile.mkdtemp(prefix="jasna_decode_bench_"))
+    workdir = Path(tempfile.mkdtemp(prefix="jasna_decode_bench_", dir='/tmp' if os.name != 'nt' else None))
     rows = []
     if not args.no_warmup:
         print(f"warmup: {clips[0].name} [{args.backends[0]}] (engine compile + caches)")

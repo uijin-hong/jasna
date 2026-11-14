@@ -342,7 +342,7 @@ def main() -> None:
         workdir = args.workdir.resolve()
         workdir.mkdir(parents=True, exist_ok=True)
     else:
-        workdir = Path(tempfile.mkdtemp(prefix="jasna_release_bench_"))
+        workdir = Path(tempfile.mkdtemp(prefix="jasna_release_bench_", dir='/tmp' if os.name != 'nt' else None))
     log_dir = workdir / "logs"
     log_dir.mkdir(exist_ok=True)
     args.csv.parent.mkdir(parents=True, exist_ok=True)

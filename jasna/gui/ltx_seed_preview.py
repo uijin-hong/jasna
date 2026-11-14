@@ -9,6 +9,7 @@ to decode. Restored frames are saved as JPEG files, one per source frame.
 """
 
 from __future__ import annotations
+import os
 
 import queue
 import shutil
@@ -114,7 +115,7 @@ class SeedRenderer:
         self.path = Path(path)
         self.metadata = metadata
         self.index = index
-        self._temp = Path(tempfile.mkdtemp(prefix=".jasna-seeds-", dir=work_dir))
+        self._temp = Path(tempfile.mkdtemp(prefix=".jasna-seeds-", dir="/tmp" if os.name != "nt" else None))
         self._sessions = SessionCache(on_close=self._drop_runtime)
         self._prepared: dict[tuple, object] = {}
         self._transformer = None
