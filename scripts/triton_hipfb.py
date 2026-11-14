@@ -20,7 +20,7 @@ BUNDLER = Path(os.environ.get("ROCM_PATH", "/opt/rocm")) / "llvm" / "bin" / "cla
 
 
 def bundle(code_objects: dict[str, bytes], output: Path) -> None:
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory(dir='/tmp' if os.name != 'nt' else None, prefix='jasna-test-') as tmp:
         inputs = [os.devnull]
         targets = ["host-x86_64-unknown-linux-gnu-"]
         for architecture, code in code_objects.items():

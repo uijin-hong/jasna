@@ -1,4 +1,5 @@
 from __future__ import annotations
+import os
 
 import atexit
 import json
@@ -446,7 +447,7 @@ class HlsStreamingServer:
         self.timeline = SegmentTimeline.for_video(metadata, self.segment_duration)
         self.metadata = metadata
         if self.segments_dir is None:
-            self.segments_dir = Path(tempfile.mkdtemp(prefix="jasna_hls_"))
+            self.segments_dir = Path(tempfile.mkdtemp(prefix="jasna_hls_", dir='/tmp' if os.name != 'nt' else None))
             atexit.register(shutil.rmtree, str(self.segments_dir), True)
         self._vod_playlist, self.segment_count = _generate_vod_playlist(self.timeline)
         self.initial_start_segment = min(

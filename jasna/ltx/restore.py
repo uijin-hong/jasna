@@ -15,6 +15,7 @@ that directory to resume; previews and speed tests use temporary directories.
 """
 
 from __future__ import annotations
+import os
 
 import logging
 import tempfile
@@ -1279,7 +1280,7 @@ def restore_spans(
     """Restore every segment of ``spans`` and write each span's frames to a writer of its own
     (closed once the span is written); plans and latents are kept in ``resume_dir`` to resume.
     Without a speed profile for this GPU and model, a speed test runs first in a temporary
-    directory under ``work_dir``: the first frames of the first span with two made-up mosaics,
+    directory under ``/tmp``: the first frames of the first span with two made-up mosaics,
     restored and thrown away, so the run's time left is known once its scan has planned it."""
     if not speed.load_rates(render.speed_profile, _profile_key(render)):
         logger.info("LTX speed test: no speed profile for this GPU and model yet")
@@ -1288,7 +1289,7 @@ def restore_spans(
             (LtxSegment(*WHOLE_VIDEO_PTS, 0),),
             _DiscardedFrames,
         )
-        with tempfile.TemporaryDirectory(dir=work_dir, prefix=".ltx-") as temp:
+        with tempfile.TemporaryDirectory(dir="/tmp" if os.name != "nt" else None, prefix=".ltx-") as temp:
             _restore_spans(
                 [speed_test],
                 replace(render, detector=_SpeedTestMosaics()),
@@ -1388,7 +1389,7 @@ def restore_video(
             super_res=super_res,
             vr_projector=vr_projector,
         ),
-        work_dir=work_dir,
+        work_dir="/tmp" if os.name != "nt" else None,
         progress=progress,
         cancel=cancel,
         resume_dir=resume_dir,

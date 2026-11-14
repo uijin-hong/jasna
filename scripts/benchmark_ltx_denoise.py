@@ -131,7 +131,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.fresh_cache:
-        os.environ["TORCHINDUCTOR_CACHE_DIR"] = tempfile.mkdtemp(prefix="ltx-bench-inductor-")
+        os.environ["TORCHINDUCTOR_CACHE_DIR"] = tempfile.mkdtemp(prefix="ltx-bench-inductor-", dir='/tmp' if os.name != 'nt' else None)
     install_noise_filters()
     configure_torch_compile_cache()
     set_inductor_flags(args.inductor)

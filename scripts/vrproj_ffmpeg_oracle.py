@@ -10,6 +10,7 @@ CPU only. Requires ffmpeg 8.x with v360. Run:
   ~/.virtualenvs/jasna-linux/bin/python scripts/vrproj_ffmpeg_oracle.py
 """
 from __future__ import annotations
+import os
 
 import subprocess
 import sys
@@ -123,7 +124,7 @@ def evaluate(case: dict, work: Path, v360_map) -> dict:
 
 def main() -> int:
     v360_map = load_v360_map()
-    with tempfile.TemporaryDirectory() as td:
+    with tempfile.TemporaryDirectory(dir='/tmp' if os.name != 'nt' else None, prefix='jasna-test-') as td:
         work = Path(td)
         rows = [evaluate(c, work, v360_map) for c in CASES]
     print(f"{'case':<16}{'N':>10}{'mean_px':>10}{'p99_px':>10}{'max_px':>10}  verdict")

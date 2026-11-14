@@ -25,7 +25,7 @@ for arch in "${ARCHS[@]}"; do
     OFFLOAD+=("--offload-arch=$arch")
 done
 
-SHIM_DIR="$(mktemp -d)"
+SHIM_DIR="$(mktemp -d /tmp/jasna-hipfbs.XXXXXX)"
 trap 'rm -rf "$SHIM_DIR"' EXIT
 echo '#include <hip/hip_fp16.h>' > "$SHIM_DIR/cuda_fp16.h"
 
